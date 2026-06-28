@@ -1,0 +1,46 @@
+export type Locale = 'en' | 'tr';
+
+export const MESSAGES = {
+  en: {
+    'nav.fiatRamp': 'Fiat ramp',
+    'nav.proof': 'Proof of users',
+    'nav.newCampaign': '+ New campaign',
+    'hero.tagline': 'Cross-border crowdfunding on Stellar',
+    'hero.title': 'Fund anyone, anywhere.',
+    'hero.subtitle':
+      'USDC milestone escrow on Stellar — backers pay, funds release as milestones are met, and refunds are enforced by code, not promises.',
+    'hero.ctaExplore': 'Explore campaigns',
+    'hero.ctaCreate': 'Start a campaign',
+    'stats.campaigns': 'Campaigns',
+    'stats.raised': 'USDC raised',
+    'stats.backers': 'Unique backers',
+    'home.campaigns': 'Campaigns',
+    'home.empty': 'No campaigns yet. Create the first one!',
+    'how.title': 'How it works',
+    'how.step1': 'Pay in fiat — a Stellar anchor converts it to USDC (SEP-24).',
+    'how.step2': 'Funds sit in a milestone escrow contract on-chain.',
+    'how.step3': 'Each milestone releases a tranche; miss the goal and everyone is refunded.',
+  },
+  tr: {
+    'nav.fiatRamp': 'Fiat rampası',
+    'nav.proof': 'Kullanıcı kanıtı',
+    'nav.newCampaign': '+ Yeni kampanya',
+    'hero.tagline': 'Stellar üzerinde sınır ötesi fonlama',
+    'hero.title': 'Herkesi, her yerde fonla.',
+    'hero.subtitle':
+      'Stellar üzerinde USDC milestone escrow — destekçi öder, para kilometre taşları tamamlandıkça serbest kalır, hedef tutmazsa iade söz değil kodla garantilidir.',
+    'hero.ctaExplore': 'Kampanyaları keşfet',
+    'hero.ctaCreate': 'Kampanya başlat',
+    'stats.campaigns': 'Kampanya',
+    'stats.raised': 'Toplanan USDC',
+    'stats.backers': 'Benzersiz destekçi',
+    'home.campaigns': 'Kampanyalar',
+    'home.empty': 'Henüz kampanya yok. İlkini sen oluştur!',
+    'how.title': 'Nasıl çalışır',
+    'how.step1': 'Fiat ile öde — bir Stellar anchor onu USDC’ye çevirir (SEP-24).',
+    'how.step2': 'Para zincirde bir milestone escrow kontratında tutulur.',
+    'how.step3': 'Her milestone bir dilim serbest bırakır; hedef tutmazsa herkes iade alır.',
+  },
+} as const;
+
+export type MessageKey = keyof (typeof MESSAGES)['en'];
