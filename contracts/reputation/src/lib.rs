@@ -12,6 +12,7 @@ pub trait FactoryInterface {
 pub enum DataKey {
     Factory,
     Score(Address),
+    Delivered(Address),
 }
 
 #[contract]
@@ -40,6 +41,13 @@ impl Reputation {
         let score: u32 = env.storage().persistent().get(&key).unwrap_or(0);
         let new_score = score + 1;
         env.storage().persistent().set(&key, &new_score);
+
+        // Track cumulative milestone deliveries (one completed campaign counts
+        // as one delivery for L4).
+        let dkey = DataKey::Delivered(creator.clone());
+        let delivered: u32 = env.storage().persistent().get(&dkey).unwrap_or(0);
+        env.storage().persistent().set(&dkey, &(delivered + 1));
+
         env.events()
             .publish((symbol_short!("rep_up"), creator), new_score);
     }
@@ -48,6 +56,13 @@ impl Reputation {
         env.storage()
             .persistent()
             .get(&DataKey::Score(creator))
+            .unwrap_or(0)
+    }
+
+    pub fn milestones_delivered(env: Env, creator: Address) -> u32 {
+        env.storage()
+            .persistent()
+            .get(&DataKey::Delivered(creator))
             .unwrap_or(0)
     }
 }

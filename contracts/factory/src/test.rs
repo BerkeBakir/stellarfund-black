@@ -3,7 +3,7 @@ use super::{Factory, FactoryClient};
 use soroban_sdk::{
     contractimport,
     testutils::{Address as _, Ledger as _},
-    Address, Env,
+    vec, Address, Env, Vec,
 };
 
 // campaign::WASM (via the `campaign` crate dev-dependency) cannot be used here:
@@ -35,9 +35,10 @@ fn setup() -> (Env, FactoryClient<'static>, Address) {
 }
 
 #[test]
-fn creates_and_registers_campaign() {
+fn creates_campaign_with_milestones() {
     let (env, client, creator) = setup();
-    let addr = client.create_campaign(&creator, &1000i128, &2000u64);
+    let milestones: Vec<i128> = vec![&env, 600i128, 400i128];
+    let addr = client.create_campaign(&creator, &1000i128, &2000u64, &milestones);
     let list = client.list_campaigns();
     assert_eq!(list.len(), 1);
     assert_eq!(list.get(0).unwrap(), addr.clone());
@@ -49,6 +50,7 @@ fn creates_and_registers_campaign() {
 #[test]
 #[should_panic(expected = "goal must be positive")]
 fn rejects_zero_goal() {
-    let (_env, client, creator) = setup();
-    client.create_campaign(&creator, &0i128, &2000u64);
+    let (env, client, creator) = setup();
+    let milestones: Vec<i128> = vec![&env, 1i128];
+    client.create_campaign(&creator, &0i128, &2000u64, &milestones);
 }

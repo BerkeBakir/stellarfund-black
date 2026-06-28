@@ -36,7 +36,13 @@ impl Factory {
         s.set(&DataKey::Counter, &0u32);
     }
 
-    pub fn create_campaign(env: Env, creator: Address, goal: i128, deadline: u64) -> Address {
+    pub fn create_campaign(
+        env: Env,
+        creator: Address,
+        goal: i128,
+        deadline: u64,
+        milestones: Vec<i128>,
+    ) -> Address {
         creator.require_auth();
         if goal <= 0 {
             panic!("goal must be positive");
@@ -70,6 +76,7 @@ impl Factory {
             &token,
             &reputation,
             &factory_addr,
+            &milestones,
         );
 
         // Register.

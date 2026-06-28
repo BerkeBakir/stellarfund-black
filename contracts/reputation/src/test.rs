@@ -56,6 +56,17 @@ fn records_and_reads_score() {
 }
 
 #[test]
+fn tracks_milestones_delivered() {
+    let (env, client, _f) = setup(true);
+    let campaign = Address::generate(&env);
+    let creator = Address::generate(&env);
+    assert_eq!(client.milestones_delivered(&creator), 0);
+    client.record_success(&campaign, &creator);
+    client.record_success(&campaign, &creator);
+    assert_eq!(client.milestones_delivered(&creator), 2);
+}
+
+#[test]
 fn unknown_creator_is_zero() {
     let (env, client, _f) = setup(true);
     let who = Address::generate(&env);
