@@ -34,7 +34,12 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-3xl p-4 sm:p-6 flex flex-col gap-5">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold">StellarFund</h1>
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-gradient">StellarFund</h1>
+          <Link href="/proof" className="text-xs text-indigo-300 underline">
+            Proof of users →
+          </Link>
+        </div>
         <p className="text-sm opacity-70">Cross-border crowdfunding on Stellar — USDC milestone escrow, refunds enforced by code.</p>
       </header>
       <PollProvider />
