@@ -34,8 +34,8 @@ export default function Home() {
   return (
     <main className="mx-auto max-w-3xl p-4 sm:p-6 flex flex-col gap-5">
       <header className="flex flex-col gap-1">
-        <h1 className="text-2xl font-bold">Stellar Crowdfund</h1>
-        <p className="text-sm opacity-70">Decentralized crowdfunding on Stellar Testnet — factory-deployed campaigns with real XLM.</p>
+        <h1 className="text-2xl font-bold">StellarFund</h1>
+        <p className="text-sm opacity-70">Cross-border crowdfunding on Stellar — USDC milestone escrow, refunds enforced by code.</p>
       </header>
       <PollProvider />
       <WalletBar />

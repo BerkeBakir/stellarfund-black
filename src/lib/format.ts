@@ -1,5 +1,12 @@
 const STROOPS = 10_000_000n;
 
+export const STATUS_LABEL: Record<number, string> = {
+  0: 'Active',
+  1: 'Releasing',
+  2: 'Completed',
+  3: 'Refunding',
+};
+
 // USDC on Stellar uses 7 decimals, same scale as XLM stroops. These aliases
 // make call sites read clearly while reusing the validated conversion logic.
 export function usdcToUnits(usdc: string): bigint {

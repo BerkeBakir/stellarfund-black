@@ -15,12 +15,7 @@ export type Milestone = {
   released: boolean;
 };
 
-export const STATUS_LABEL: Record<number, string> = {
-  0: 'Active',
-  1: 'Releasing',
-  2: 'Completed',
-  3: 'Refunding',
-};
+export { STATUS_LABEL } from './format';
 
 export async function getSummary(id: string): Promise<Summary> {
   const t = (await simulateRead(id, 'summary')) as [
