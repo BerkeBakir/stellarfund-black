@@ -4,7 +4,7 @@ use super::{Campaign, CampaignClient};
 use soroban_sdk::{
     contract, contractimpl, symbol_short,
     testutils::{Address as _, Events as _, Ledger},
-    token, Address, Env, IntoVal,
+    token, vec, Address, Env, IntoVal, Vec,
 };
 
 // Mock reputation that records calls.
@@ -23,6 +23,8 @@ fn create_token<'a>(env: &Env, admin: &Address) -> (Address, token::StellarAsset
     (id.clone(), token::StellarAssetClient::new(env, &id))
 }
 
+/// Set up a campaign with goal 1000, deadline 2000, and a two-milestone
+/// schedule (600 + 400 = 1000).
 fn setup() -> (
     Env,
     CampaignClient<'static>,
@@ -43,9 +45,53 @@ fn setup() -> (
 
     let campaign_id = env.register(Campaign, ());
     let client = CampaignClient::new(&env, &campaign_id);
-    // goal 1000 stroops, deadline 2000
-    client.init(&creator, &1000i128, &2000u64, &token_id, &reputation, &factory);
+    let milestones: Vec<i128> = vec![&env, 600i128, 400i128];
+    client.init(
+        &creator,
+        &1000i128,
+        &2000u64,
+        &token_id,
+        &reputation,
+        &factory,
+        &milestones,
+    );
     (env, client, creator, token_id, token_admin, reputation)
+}
+
+#[test]
+fn init_stores_milestone_schedule() {
+    let (_env, client, _creator, _t, _ta, _rep) = setup();
+    let ms = client.milestones();
+    assert_eq!(ms.len(), 2);
+    assert_eq!(ms.get(0).unwrap().amount, 600);
+    assert_eq!(ms.get(1).unwrap().amount, 400);
+    assert!(!ms.get(0).unwrap().released);
+    assert!(!ms.get(1).unwrap().released);
+}
+
+#[test]
+#[should_panic(expected = "milestones must sum to goal")]
+fn init_rejects_milestones_not_summing_to_goal() {
+    let env = Env::default();
+    env.mock_all_auths();
+    let admin = Address::generate(&env);
+    let (token_id, _ta) = create_token(&env, &admin);
+    let reputation = Address::generate(&env);
+    let factory = Address::generate(&env);
+    let creator = Address::generate(&env);
+    let campaign_id = env.register(Campaign, ());
+    let client = CampaignClient::new(&env, &campaign_id);
+    // 600 + 300 = 900 != goal 1000
+    let bad: Vec<i128> = vec![&env, 600i128, 300i128];
+    client.init(
+        &creator,
+        &1000i128,
+        &2000u64,
+        &token_id,
+        &reputation,
+        &factory,
+        &bad,
+    );
 }
 
 #[test]
@@ -59,56 +105,107 @@ fn contribute_accumulates_and_reaches_goal() {
     client.contribute(&alice, &500); // now 1100 >= 1000
 
     assert_eq!(client.contribution_of(&alice), 1100);
-    let (_c, goal, _d, total, _status) = client.summary();
+    let (_c, goal, _d, total, _status, mcount, released) = client.summary();
     assert_eq!(goal, 1000);
     assert_eq!(total, 1100);
-    // funds moved into the campaign: alice minted 2000, contributed 1100
+    assert_eq!(mcount, 2);
+    assert_eq!(released, 0);
     assert_eq!(token_client.balance(&client.address), 1100);
     assert_eq!(token_client.balance(&alice), 900);
 }
 
 #[test]
-fn claim_after_success_moves_funds_and_calls_reputation() {
-    let (env, client, creator, token_id, token_admin, rep) = setup();
+fn release_sends_tranche_and_advances() {
+    let (env, client, creator, token_id, token_admin, _rep) = setup();
     let alice = Address::generate(&env);
     token_admin.mint(&alice, &2000);
     client.contribute(&alice, &1000); // exactly goal
     let token_client = token::TokenClient::new(&env, &token_id);
 
-    // No reputation event should have been published before claim.
-    let before_has_rec = env
+    env.ledger().set_timestamp(3000); // past deadline 2000
+    client.release(&0u32); // first tranche 600
+
+    assert_eq!(token_client.balance(&creator), 600);
+    assert_eq!(token_client.balance(&client.address), 400);
+    assert_eq!(client.total_released(), 600);
+    let (_c, _g, _d, _t, status, _mc, released) = client.summary();
+    assert_eq!(status, 1); // Releasing
+    assert_eq!(released, 1);
+    assert!(client.milestones().get(0).unwrap().released);
+}
+
+#[test]
+#[should_panic(expected = "releases must be sequential")]
+fn release_must_be_sequential() {
+    let (env, client, _creator, _t, token_admin, _rep) = setup();
+    let alice = Address::generate(&env);
+    token_admin.mint(&alice, &2000);
+    client.contribute(&alice, &1000);
+    env.ledger().set_timestamp(3000);
+    client.release(&1u32); // skipping index 0
+}
+
+#[test]
+fn final_release_completes_and_records_reputation() {
+    let (env, client, creator, token_id, token_admin, rep) = setup();
+    let alice = Address::generate(&env);
+    token_admin.mint(&alice, &2000);
+    client.contribute(&alice, &1000);
+    let token_client = token::TokenClient::new(&env, &token_id);
+
+    env.ledger().set_timestamp(3000);
+    client.release(&0u32); // 600
+
+    // Reputation should not have fired yet.
+    let before = env
         .events()
         .all()
         .iter()
         .any(|(addr, _topics, _data)| addr == rep);
-    assert!(!before_has_rec);
+    assert!(!before);
 
-    env.ledger().set_timestamp(3000); // past deadline 2000
-    client.claim();
+    client.release(&1u32); // 400 -> completes
 
-    // Capture events emitted by the `claim()` invocation before any further
-    // top-level contract calls (like `summary()`) reset the event buffer.
     let rec_topic: soroban_sdk::Vec<soroban_sdk::Val> = (symbol_short!("rec"),).into_val(&env);
-    let events_after_claim = env.events().all();
+    let events_after = env.events().all();
 
     assert_eq!(token_client.balance(&creator), 1000);
     assert_eq!(token_client.balance(&client.address), 0);
-    let (_c, _g, _d, _t, status) = client.summary();
-    assert_eq!(status, 1); // Claimed
+    assert_eq!(client.total_released(), 1000);
+    let (_c, _g, _d, _t, status, _mc, released) = client.summary();
+    assert_eq!(status, 2); // Completed
+    assert_eq!(released, 2);
 
-    // Verify the cross-contract call to Reputation::record_success actually
-    // fired: MockRep publishes (symbol_short!("rec"),) -> creator.
-    let found_rep_event = events_after_claim.iter().any(|(addr, topics, data)| {
+    let found = events_after.iter().any(|(addr, topics, data)| {
         if addr != rep || topics != rec_topic {
             return false;
         }
-        let decoded_creator: Address = data.into_val(&env);
-        decoded_creator == creator
+        let decoded: Address = data.into_val(&env);
+        decoded == creator
     });
-    assert!(
-        found_rep_event,
-        "expected MockRep to publish a 'rec' event with the creator address after claim"
-    );
+    assert!(found, "expected reputation record_success on final release");
+}
+
+#[test]
+#[should_panic(expected = "goal not reached")]
+fn cannot_release_before_goal() {
+    let (env, client, _creator, _t, token_admin, _rep) = setup();
+    let alice = Address::generate(&env);
+    token_admin.mint(&alice, &2000);
+    client.contribute(&alice, &100); // below goal
+    env.ledger().set_timestamp(3000);
+    client.release(&0u32);
+}
+
+#[test]
+#[should_panic(expected = "deadline not reached")]
+fn cannot_release_before_deadline() {
+    let (env, client, _creator, _t, token_admin, _rep) = setup();
+    let alice = Address::generate(&env);
+    token_admin.mint(&alice, &2000);
+    client.contribute(&alice, &1000);
+    // timestamp still 1000, deadline 2000
+    client.release(&0u32);
 }
 
 #[test]
@@ -127,6 +224,17 @@ fn refund_when_goal_missed() {
 }
 
 #[test]
+#[should_panic(expected = "goal was reached")]
+fn cannot_refund_after_goal_met() {
+    let (env, client, _creator, _t, token_admin, _rep) = setup();
+    let alice = Address::generate(&env);
+    token_admin.mint(&alice, &2000);
+    client.contribute(&alice, &1000);
+    env.ledger().set_timestamp(3000);
+    client.refund(&alice);
+}
+
+#[test]
 #[should_panic(expected = "campaign is not active")]
 fn cannot_contribute_after_deadline() {
     let (env, client, _creator, _t, token_admin, _rep) = setup();
@@ -134,15 +242,4 @@ fn cannot_contribute_after_deadline() {
     token_admin.mint(&alice, &1000);
     env.ledger().set_timestamp(3000);
     client.contribute(&alice, &100);
-}
-
-#[test]
-#[should_panic(expected = "goal not reached")]
-fn cannot_claim_when_goal_missed() {
-    let (env, client, _creator, _t, token_admin, _rep) = setup();
-    let alice = Address::generate(&env);
-    token_admin.mint(&alice, &1000);
-    client.contribute(&alice, &100);
-    env.ledger().set_timestamp(3000);
-    client.claim();
 }
