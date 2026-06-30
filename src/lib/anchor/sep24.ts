@@ -78,14 +78,39 @@ const TERMINAL = new Set([
 /**
  * Open the interactive popup and poll until the transfer reaches a terminal
  * state. `onStatus` reports intermediate statuses for the UI.
+ *
+ * The popup is opened *synchronously* at the very start (before any await) so
+ * the browser keeps it tied to the user's click and does not block it; we then
+ * navigate that same window once the anchor URL is ready.
  */
 export async function runInteractive(
   kind: Kind,
   publicKey: string,
   onStatus: (status: string) => void,
 ): Promise<AnchorTx> {
-  const { id, url } = await startInteractive(kind, publicKey);
-  window.open(url, 'anchor_interactive', 'width=480,height=720');
+  const win = window.open('about:blank', 'anchor_interactive', 'width=480,height=720');
+  onStatus('opening');
+
+  let id: string;
+  let url: string;
+  try {
+    ({ id, url } = await startInteractive(kind, publicKey));
+  } catch (e) {
+    win?.close();
+    throw e;
+  }
+
+  if (win && !win.closed) {
+    win.location.href = url;
+  } else {
+    // Popup was blocked — fall back to a same-tab navigation attempt.
+    const opened = window.open(url, 'anchor_interactive', 'width=480,height=720');
+    if (!opened) {
+      throw new Error(
+        'Your browser blocked the anchor window. Please allow pop-ups for this site and try again.',
+      );
+    }
+  }
   onStatus('incomplete');
 
   const deadline = Date.now() + 5 * 60 * 1000; // 5 min

@@ -6,7 +6,8 @@ import { useAppStore } from '@/store';
 import { explorerTxUrl } from '@/lib/config';
 
 const STATUS_COPY: Record<string, string> = {
-  incomplete: 'Waiting for you to complete the anchor form…',
+  opening: 'Authenticating with the anchor (sign in your wallet)…',
+  incomplete: 'Waiting for you to complete the anchor form in the pop-up…',
   pending_user_transfer_start: 'Anchor is waiting for the transfer…',
   pending_anchor: 'Anchor is processing…',
   pending_stellar: 'Settling on Stellar…',
