@@ -17,6 +17,10 @@ export const TOKEN_ISSUER = 'GBV7COBZWLBL5KCBWIHMWTG4LG5H4P2AMS5RDDAOFN5QBPPW2SZ
 export const CAMPAIGN_WASM_HASH =
   'f42f7c5faae416b3a77695e9f9a8330cdad45901a1deebea894081ccf7f4f1a2';
 
+// External user-feedback Google Form.
+export const FEEDBACK_FORM_URL =
+  'https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform';
+
 // SEP-24 sandbox anchor (fiat <-> USDC bridge demonstration).
 export const ANCHOR_HOME_DOMAIN = 'testanchor.stellar.org';
 export const ANCHOR_BASE_URL = 'https://testanchor.stellar.org';

@@ -76,9 +76,9 @@ against `testanchor.stellar.org`: pay fiat → receive USDC (on-ramp), or send U
 
 ## Feedback-driven improvements
 
-User feedback is collected via a Google Form (questions in [`docs/GOOGLE_FORM.md`](docs/GOOGLE_FORM.md));
-the exported responses live at **`docs/feedback/` _(Excel link added after collection)_**. Each
-recurring theme maps to a shipped change:
+User feedback is collected via a [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform)
+(questions in [`docs/GOOGLE_FORM.md`](docs/GOOGLE_FORM.md)); the exported responses live at
+**`docs/feedback/` _(Excel link added after collection)_**. Each recurring theme maps to a shipped change:
 
 | Feedback theme | Shipped change | Commit |
 |---|---|---|

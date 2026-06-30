@@ -92,7 +92,9 @@ Collected via the in-app feedback widget (`/api/feedback`).
 - **Live demo:** https://stellarfund-xi.vercel.app
 - **Pitch deck:** `docs/StellarFund-Pitch.pptx`
 - **Demo video (full walkthrough):** _<record and paste link>_
+- **Google Form (live):** https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform
 - **Google Form questions:** [`docs/GOOGLE_FORM.md`](GOOGLE_FORM.md)
+- **Private analytics dashboard:** `/stats` (on-chain, key-gated)
 - **Exported feedback (Excel):** _<add to `docs/feedback/` after collection>_
 
 ## L5 checklist

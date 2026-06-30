@@ -4,6 +4,7 @@ export const MESSAGES = {
   en: {
     'nav.fiatRamp': 'Fiat ramp',
     'nav.proof': 'Proof of users',
+    'nav.feedback': 'Feedback',
     'nav.newCampaign': '+ New campaign',
     'hero.tagline': 'Cross-border crowdfunding on Stellar',
     'hero.title': 'Fund anyone, anywhere.',
@@ -28,6 +29,7 @@ export const MESSAGES = {
   tr: {
     'nav.fiatRamp': 'Fiat rampası',
     'nav.proof': 'Kullanıcı kanıtı',
+    'nav.feedback': 'Geri bildirim',
     'nav.newCampaign': '+ Yeni kampanya',
     'hero.tagline': 'Stellar üzerinde sınır ötesi fonlama',
     'hero.title': 'Herkesi, her yerde fonla.',

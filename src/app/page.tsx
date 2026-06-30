@@ -10,6 +10,7 @@ import LanguageSwitcher from '@/components/LanguageSwitcher';
 import FirstRunHint from '@/components/FirstRunHint';
 import { useAppStore } from '@/store';
 import { getSummary, type Summary } from '@/lib/campaign';
+import { FEEDBACK_FORM_URL } from '@/lib/config';
 import { getAllMetadata, type CampaignMeta, CATEGORIES } from '@/lib/metadata';
 import { filterCampaigns } from '@/lib/discovery';
 import { getProofData } from '@/lib/proof';
@@ -81,6 +82,14 @@ export default function Home() {
           <Link href="/proof" className="text-indigo-300 underline">
             {t('nav.proof')} →
           </Link>
+          <a
+            href={FEEDBACK_FORM_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-fuchsia-300 underline"
+          >
+            {t('nav.feedback')} →
+          </a>
           <LanguageSwitcher />
         </div>
       </nav>
