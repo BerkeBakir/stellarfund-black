@@ -67,6 +67,29 @@ against `testanchor.stellar.org`: pay fiat → receive USDC (on-ramp), or send U
 - **Feedback widget**, **Vercel Analytics**, **Sentry** (DSN-gated), **PWA**
 - **CI/CD** — contract tests + frontend lint/test/build
 
+## What's new in Level 5 (Blue Belt)
+
+- **Campaign identity** — title, description, category, cover image and creator name (off-chain in Vercel Blob, keyed by contract address). Cards and detail pages now show real campaigns instead of raw addresses.
+- **Discovery** — text search + category filters (Education, Health, Technology, Community, Emergency, Other) on top of the active/past split.
+- **Onboarding** — first-run 3-step hint; one-tap `Get Test USDC` retained.
+- **Stability** — home "unique backers" stat now reads real on-chain backers; `getEvents` pagination + 5-contract chunking; contributions capped at the goal.
+
+## Feedback-driven improvements
+
+User feedback is collected via a Google Form (questions in [`docs/GOOGLE_FORM.md`](docs/GOOGLE_FORM.md));
+the exported responses live at **`docs/feedback/` _(Excel link added after collection)_**. Each
+recurring theme maps to a shipped change:
+
+| Feedback theme | Shipped change | Commit |
+|---|---|---|
+| "I can't tell what a campaign is — only an address shows" | Campaign identity (title/description/category/image/creator) | [`0230d31`](https://github.com/BerkeBakir/stellarfund/commit/0230d31), [`7685208`](https://github.com/BerkeBakir/stellarfund/commit/7685208) |
+| "Hard to find relevant campaigns" | Search + category filters | [`7685208`](https://github.com/BerkeBakir/stellarfund/commit/7685208) |
+| "I didn't know I needed test USDC before contributing" | First-run onboarding hint + contribute pre-check | [`3114ccc`](https://github.com/BerkeBakir/stellarfund/commit/3114ccc), [`cd3be2c`](https://github.com/BerkeBakir/stellarfund/commit/cd3be2c) |
+| "Couldn't connect my mobile/other wallet" | Added Albedo/Rabet/Hana + WalletConnect | [`24a4c3b`](https://github.com/BerkeBakir/stellarfund/commit/24a4c3b) |
+| "Proof page showed 0 backers" | getEvents pagination + 5-ID chunking fix | [`c8d6d68`](https://github.com/BerkeBakir/stellarfund/commit/c8d6d68) |
+
+> Next phase: creator profiles, campaign comments/updates, email notifications, and a path to mainnet — prioritised by the form's "which feature next?" responses.
+
 ## Tech stack
 
 | Layer | Technology |

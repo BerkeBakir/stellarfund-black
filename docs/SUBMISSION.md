@@ -74,7 +74,7 @@ Collected via the in-app feedback widget (`/api/feedback`).
 | Mobile responsive — home | ![mobile-home](screenshots/05-mobile-home.jpg) |
 | Mobile responsive — campaigns | ![mobile-campaigns](screenshots/06-mobile-campaigns.jpg) |
 
-## Demo video script (~2–3 min)
+## Demo video script — L4 (~2–3 min)
 
 1. Intro: the problem (cross-border funding) + StellarFund's one-liner.
 2. Connect wallet → **Get Test USDC** (one tap).
@@ -83,3 +83,38 @@ Collected via the in-app feedback widget (`/api/feedback`).
 5. Creator: after goal+deadline, **release** a milestone tranche (sequential).
 6. `/ramp`: run the **SEP-24** fiat→USDC on-ramp against the test anchor.
 7. Wrap: architecture (Factory→Escrow→Reputation), analytics, TR/EN toggle.
+
+---
+
+# Level 5 (Blue Belt) Submission
+
+## L5 links
+- **Live demo:** https://stellarfund-xi.vercel.app
+- **Pitch deck:** `docs/StellarFund-Pitch.pptx`
+- **Demo video (full walkthrough):** _<record and paste link>_
+- **Google Form questions:** [`docs/GOOGLE_FORM.md`](GOOGLE_FORM.md)
+- **Exported feedback (Excel):** _<add to `docs/feedback/` after collection>_
+
+## L5 checklist
+- [x] New features from feedback — campaign identity + discovery
+- [x] UX/UI + stability improvements
+- [x] Optimized onboarding (first-run hint, one-tap test USDC)
+- [x] 20+ meaningful commits + updated docs
+- [x] Professional pitch deck (`.pptx`)
+- [x] README feedback-iteration summary with commit links
+- [ ] **50+ testnet users** with active usage (user-driven; tracked on `/proof`)
+- [ ] **Google Form** created + responses exported to Excel + linked in README (user)
+- [ ] **Full demo video** recorded (user; script below)
+- [ ] Analytics / transaction-activity screenshots (user)
+
+## L5 demo video script — full walkthrough (~3–4 min)
+
+1. **Hook:** the problem + StellarFund one-liner over the animated globe.
+2. **Discovery:** search + category filters; open a campaign with a real title/image.
+3. **Onboarding:** connect wallet → one-tap **Get Test USDC**.
+4. **Create a campaign WITH identity:** title, description, category, cover image, milestones → on-chain create.
+5. **Contribute:** USDC contribution (real tx); show the milestone timeline + capped-at-goal.
+6. **Proof:** `/proof` board updates with the backer wallet + stellar.expert links.
+7. **Creator flow:** release a milestone tranche after goal/deadline.
+8. **Fiat ramp:** `/ramp` SEP-24 on-ramp against the test anchor.
+9. **Wrap:** architecture, analytics, TR/EN, and the L5 roadmap (profiles, notifications, mainnet).
