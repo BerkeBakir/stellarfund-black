@@ -1,11 +1,16 @@
-# StellarFund — User Onboarding Google Form
+# StellarFund — Mainnet User Onboarding Google Form (Level 6)
 
-Create a Google Form with the fields below, share the link with testers, then
-export responses to Excel (Responses tab → Google Sheets → File → Download →
-`.xlsx`) and link the exported sheet in the README.
+Create a Google Form with the fields below, share the link with **mainnet** users,
+then export responses to Excel (Responses tab → Google Sheets → File → Download →
+`.xlsx`), save it to `docs/feedback/` and link the exported sheet in the README.
 
+> **Level 6 requires** collecting wallet address, email, name, and a product
+> rating/feedback, exporting to Excel, linking it in the README, and outlining the
+> next-phase improvements **with git commit links** in the README improvement section.
+>
 > Tip: turn on "Collect email addresses" in Form Settings, and make wallet +
-> rating required.
+> rating required. The wallet address lets reviewers match each response to real
+> on-chain activity on the public `/proof` board.
 
 ## Fields
 

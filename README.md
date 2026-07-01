@@ -1,30 +1,33 @@
-# StellarFund 🔵
+# StellarFund ⚫
 
-> Cross-border crowdfunding & SME micro-financing on **Stellar Testnet** — backers fund
-> creators anywhere, money is held in a **USDC milestone-escrow** smart contract that
-> releases funds tranche-by-tranche as milestones are met, and **refunds are enforced by
-> code** if the goal is missed. A real **SEP-24 anchor** bridge demonstrates the fiat↔USDC
-> on/off ramp.
+> Cross-border crowdfunding on **Stellar mainnet** — backers fund creators anywhere in
+> **XLM**, money is held in a **milestone-escrow** smart contract that releases funds
+> tranche-by-tranche as milestones are met, and **refunds are enforced by code** if the
+> goal is missed.
 
-Built for the **Stellar Journey to Mastery — Blue Belt (Level 5)**: scaling the Green Belt MVP
-with campaign identity, discovery, more wallets, and feedback-driven iteration. Evolves the
-Orange Belt crowdfund engine (Factory → Campaign → Reputation) into a production-shaped product.
+Built for the **Stellar Journey to Mastery — Black Belt (Level 6)**: taking the MVP to
+**mainnet** with real users, a security review, and a public launch. Evolves the
+Factory → Escrow → Reputation engine into a production product custodying real value.
 
-🔗 **Live demo:** https://stellarfund-blue.vercel.app
-🎬 **Demo video:** https://youtu.be/ntMAbfhnGQw
-🧾 **Proof of users:** https://stellarfund-blue.vercel.app/proof (on-chain unique-backer evidence)
+🔗 **Live app (mainnet):** https://stellarfund-black.vercel.app
+🎬 **Demo video:** `<video-link>`
+🧾 **Proof of users:** https://stellarfund-black.vercel.app/proof (on-chain backer evidence)
+🔒 **Security review:** [`docs/SECURITY.md`](docs/SECURITY.md)
+📖 **User guide:** [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md)
 
-> **Network:** Stellar **Testnet** only. No real funds.
+> **Network:** Stellar **mainnet (Public)**. Contributions are **real XLM** — only fund
+> what you're comfortable with, and never share your secret key.
 
 ---
 
 ## Why it matters
 
-Cross-border fundraising is broken for everyone outside major financial hubs: 5–10%+ fees,
-days to settle, and most emerging-market creators can't even access Kickstarter/GoFundMe
-payout rails. StellarFund makes global funding near-instant, sub-cent, transparent, and
-**milestone-enforced** — a backer in Germany can fund a bakery in Kenya in seconds, for cents,
-and the creator receives spendable value released against real progress.
+Cross-border fundraising is broken for everyone outside major financial hubs: 5–10%+
+fees, days to settle, and most emerging-market creators can't even access
+Kickstarter/GoFundMe payout rails. StellarFund makes global funding near-instant,
+low-fee, transparent, and **milestone-enforced** — a backer in Germany can fund a
+project in Kenya in seconds, and the creator receives value released against real
+progress.
 
 ## Architecture — 3 contracts, milestone escrow
 
@@ -32,86 +35,87 @@ and the creator receives spendable value released against real progress.
         create_campaign(goal, milestones[])            record_success()
   ┌──────────┐  deploy + init   ┌──────────────────┐  on completion  ┌────────────┐
   │ Factory  │ ───────────────▶ │ Escrow (Campaign) │ ──────────────▶ │ Reputation │
-  │ registry │                  │ USDC custody +    │                 │  scores +  │
+  │ registry │                  │  XLM custody +    │                 │  scores +  │
   └──────────┘ ◀── is_campaign ─│ milestone release │                 │ deliveries │
                                  └──────────────────┘
-                                   │ USDC SAC transfer (contribute / release / refund)
+                                   │ XLM SAC transfer (contribute / release / refund)
                                    ▼
                           ┌────────────────────────┐
-                          │  Testnet USDC (SAC)     │
+                          │  Native XLM (SAC)       │
                           └────────────────────────┘
 ```
 
 - **Factory** — `create_campaign(creator, goal, deadline, milestones)` deploys & registers an Escrow; `list_campaigns`, `is_campaign`.
-- **Escrow** — custodies USDC. `contribute`, `release(index)` (sequential milestone tranche to creator, after goal met + deadline), `refund` (backers reclaim if goal missed). State: Active → Releasing → Completed / Refunding. Invariant: milestones sum to goal; each releases once. Calls Reputation on final release.
+- **Escrow** — custodies XLM. `contribute`, `release(index)` (sequential milestone tranche to creator, after goal met + deadline), `refund` (backers reclaim if goal missed). State: Active → Releasing → Completed / Refunding. Invariant: milestones sum to goal; each releases once. Calls Reputation on final release.
 - **Reputation** — `record_success` (gated to registered campaigns via Factory), `get_score`, `milestones_delivered`.
 
-## Fiat ↔ USDC bridge (SEP-24 sandbox anchor)
+The escrow is asset-agnostic: it uses the token client against the **native XLM Stellar
+Asset Contract**, so the same logic that moves any Stellar asset moves lumens.
 
-The `/ramp` page runs the real **SEP-10 auth + SEP-24 interactive deposit/withdraw** protocol
-against `testanchor.stellar.org`: pay fiat → receive USDC (on-ramp), or send USDC → receive fiat
-(off-ramp), with KYC collected inside the interactive flow (SEP-12).
+## Security
 
-> **Token note:** the test anchor issues its own USDC (issuer `GBBD47IF…`), which differs from
-> the escrow's mintable test USDC (issuer `GBV7COBZ…`). The anchor therefore demonstrates the
-> **fiat-ramp protocol**; the escrow loop runs on the mintable USDC so test users can be funded
-> one-tap. Both are real on testnet.
+Pre-mainnet internal security review in [`docs/SECURITY.md`](docs/SECURITY.md) — threat
+model, invariants, authorization review, and findings (state-TTL on mainnet,
+checks-effects-interactions and `checked_add` hardening). Submitted as the basis for the
+Level 6 **mentor/team security review**.
 
 ## Features
 
-- USDC **milestone escrow** with sequential tranche release + code-enforced refunds
-- **One-tap onboarding** — `Get Test USDC` (fund + USDC trustline + faucet mint) in one click
-- **SEP-24 fiat↔USDC ramp** (`/ramp`)
-- **Proof board** (`/proof`) — unique backer wallets straight from chain, with stellar.expert links
-- **Bold animated UI** — aurora/glassmorphism theme, Framer-Motion hero with a cross-border money arc, live count-up stats
+- **XLM milestone escrow** with sequential tranche release + code-enforced refunds
+- **Mainnet onboarding** — connect wallet, fund with XLM, contribute (no faucet)
+- **Proof of Users** (`/proof`) — unique backer wallets straight from chain, with stellar.expert links
+- **Campaign identity** — title, description, category, cover image, creator name
+- **Discovery** — search + category filters; active/past split
+- **Bold animated UI** — aurora/glassmorphism theme, Framer-Motion hero, live count-up stats
 - **TR/EN i18n** + language switcher
-- **Feedback widget**, **Vercel Analytics**, **Sentry** (DSN-gated), **PWA**
+- **Private analytics** (`/stats`, key-gated) computed on-chain
 - **CI/CD** — contract tests + frontend lint/test/build
 
-## What's new in Level 5 (Blue Belt)
+## Advanced feature — cross-border flows
 
-- **Campaign identity** — title, description, category, cover image and creator name (off-chain in Vercel Blob, keyed by contract address). Cards and detail pages now show real campaigns instead of raw addresses.
-- **Discovery** — text search + category filters (Education, Health, Technology, Community, Emergency, Other) on top of the active/past split.
-- **Onboarding** — first-run 3-step hint; one-tap `Get Test USDC` retained.
-- **Stability** — home "unique backers" stat now reads real on-chain backers; `getEvents` pagination + 5-contract chunking; contributions capped at the goal.
+StellarFund integrates the **SEP-10 + SEP-24** anchor protocol (interactive
+deposit/withdraw) as a cross-border on/off-ramp demonstration. On the mainnet build the
+`/ramp` page is gated (the reference `testanchor.stellar.org` is testnet-only); the core
+product custodies native XLM directly.
 
 ## Feedback-driven improvements
 
-User feedback is collected via a [Google Form](https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform)
-(questions in [`docs/GOOGLE_FORM.md`](docs/GOOGLE_FORM.md)); the exported responses live at
-**`docs/feedback/` _(Excel link added after collection)_**. Each recurring theme maps to a shipped change:
+User feedback is collected via a [Google Form](docs/GOOGLE_FORM.md) (wallet + email +
+name + rating + feedback); exported responses live in **`docs/feedback/`** _(Excel link
+added after collection)_. Each recurring theme maps to a shipped change with its commit:
 
 | Feedback theme | Shipped change | Commit |
 |---|---|---|
-| "I can't tell what a campaign is — only an address shows" | Campaign identity (title/description/category/image/creator) | [`0230d31`](https://github.com/BerkeBakir/stellarfund-blue/commit/0230d31), [`7685208`](https://github.com/BerkeBakir/stellarfund-blue/commit/7685208) |
-| "Hard to find relevant campaigns" | Search + category filters | [`7685208`](https://github.com/BerkeBakir/stellarfund-blue/commit/7685208) |
-| "I didn't know I needed test USDC before contributing" | First-run onboarding hint + contribute pre-check | [`3114ccc`](https://github.com/BerkeBakir/stellarfund-blue/commit/3114ccc), [`cd3be2c`](https://github.com/BerkeBakir/stellarfund-blue/commit/cd3be2c) |
-| "Couldn't connect my mobile/other wallet" | Added Albedo/Rabet/Hana + WalletConnect | [`24a4c3b`](https://github.com/BerkeBakir/stellarfund-blue/commit/24a4c3b) |
-| "Proof page showed 0 backers" | getEvents pagination + 5-ID chunking fix | [`c8d6d68`](https://github.com/BerkeBakir/stellarfund-blue/commit/c8d6d68) |
+| "I can't tell what a campaign is — only an address shows" | Campaign identity (title/description/category/image/creator) | [`0230d31`](https://github.com/BerkeBakir/stellarfund-black/commit/0230d31) |
+| "Hard to find relevant campaigns" | Search + category filters | [`7685208`](https://github.com/BerkeBakir/stellarfund-black/commit/7685208) |
+| "Proof page showed 0 backers" | getEvents pagination + 5-ID chunking fix | [`c8d6d68`](https://github.com/BerkeBakir/stellarfund-black/commit/c8d6d68) |
+| "The 0-backers stat looked broken while loading" | Loading state on the backers counter | [`65546c3`](https://github.com/BerkeBakir/stellarfund-black/commit/65546c3) |
+| "Testnet USDC isn't real adoption" | Mainnet + native XLM migration | [`066b64e`](https://github.com/BerkeBakir/stellarfund-black/commit/066b64e) |
 
-> Next phase: creator profiles, campaign comments/updates, email notifications, and a path to mainnet — prioritised by the form's "which feature next?" responses.
+> **Next phase (based on feedback):** TTL-hardening on the contracts (see SECURITY.md
+> F-1), fee sponsorship for gasless contributions, creator profiles, and campaign
+> updates/comments — prioritised by the form's "what should we add next?" responses.
+> Commit links will be added here as each ships.
 
 ## Tech stack
 
 | Layer | Technology |
 |---|---|
-| Contracts | Rust + soroban-sdk 22 (Soroban), stellar-cli 27 |
+| Contracts | Rust + soroban-sdk 22 (Soroban), stellar-cli |
 | Frontend | Next.js 16 (App Router) + React 19 + TypeScript |
 | Styling | Tailwind v4, Framer Motion |
 | Chain | @stellar/stellar-sdk 16, @creit.tech/stellar-wallets-kit 2.4 |
-| Anchor | SEP-10 / SEP-24 / SEP-12 (testanchor.stellar.org) |
-| Telemetry | Vercel Analytics, Sentry |
 | Hosting | Vercel |
 
-## Deployed on Testnet
+## Deployed on Mainnet
 
-See [`docs/DEPLOYMENT.md`](docs/DEPLOYMENT.md) for the full address table.
+_Addresses are filled in after the mainnet deploy._
 
 | Contract | Address |
 |---|---|
-| Factory | `CDNLINFENSRBB3WZ4JCSJC5PPJT6CZJPSQ7EY5W2HC4UYZVHMGVHVNAF` |
-| Reputation | `CCRWJWU42LP3ATOA6R4SJ4532XXQO6VSIXS5BWNQTZZVYAUSZCG5U7P4` |
-| USDC (test SAC) | `CD4PMJAYGZ6DJI7R47PS7SUJ733GU7B4GEA6W7DKLDM5HJM3TGRPHZE7` |
+| Factory | `<CFACTORY…>` |
+| Reputation | `<CREP…>` |
+| Token (native XLM SAC) | `CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA` |
 
 ## Getting started
 
@@ -123,26 +127,26 @@ npm run dev          # http://localhost:3000
 cd contracts/<name> && cargo test --lib
 ```
 
-Environment (`.env.local`, all optional except the faucet secret for onboarding):
+Environment (`.env.local`):
 
 ```bash
-USDC_ISSUER_SECRET=        # server-only; mints test USDC for onboarding
-NEXT_PUBLIC_SENTRY_DSN=    # enables Sentry error tracking
-FEEDBACK_WEBHOOK_URL=      # forwards feedback to a webhook
+NEXT_PUBLIC_FACTORY_ID=          # mainnet Factory contract id (after deploy)
+NEXT_PUBLIC_REPUTATION_ID=       # mainnet Reputation contract id (after deploy)
+NEXT_PUBLIC_CAMPAIGN_WASM_HASH=  # campaign wasm hash (after deploy)
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID=   # optional, enables WalletConnect
+NEXT_PUBLIC_STATS_KEY=           # gates the private /stats dashboard
+BLOB_READ_WRITE_TOKEN=           # Vercel Blob (campaign metadata)
 ```
 
-## Project structure
+## Documentation
 
-```
-contracts/{factory,campaign,reputation}   # Soroban contracts (Rust)
-src/lib/         # chain clients (soroban, factory, campaign, reputation, events, onboard, proof)
-src/lib/anchor/  # SEP-10 + SEP-24 anchor integration
-src/components/  # UI (Hero, CampaignDetail, CreateForm, WalletBar, AnchorRamp, FeedbackForm, …)
-src/app/         # routes: / /create /campaign/[id] /ramp /proof /api/{faucet,feedback}
-src/i18n/        # EN/TR messages + provider
-docs/            # design spec, plan, deployment, submission
-```
+- [`docs/SECURITY.md`](docs/SECURITY.md) — security review
+- [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md) — end-user guide
+- [`docs/GOOGLE_FORM.md`](docs/GOOGLE_FORM.md) — onboarding form spec
+- [`docs/MARKETING.md`](docs/MARKETING.md) — launch/marketing kit
+- [`docs/blog/`](docs/blog/milestone-escrow-on-soroban.md) — technical blog (ecosystem contribution)
+- [`docs/SUBMISSION-L6.md`](docs/SUBMISSION-L6.md) — Level 6 submission tracker
 
 ## License
 
-MIT — testnet demo for the Stellar Journey to Mastery program.
+MIT — for the Stellar Journey to Mastery program.
