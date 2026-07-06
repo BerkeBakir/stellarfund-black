@@ -7,8 +7,8 @@ deliverables; `<…>` placeholders are filled in after the mainnet deploy.
 - **Public GitHub repo:** https://github.com/BerkeBakir/stellarfund-black
 - **Live mainnet app:** https://stellarfund-black.vercel.app
 - **Demo video:** https://youtu.be/Jo3XGBu4Q5o
-- **Twitter/X launch post:** `<tweet-link>` (see `docs/MARKETING.md`)
-- **Technical blog (ecosystem contribution):** `<blog-link>` (draft in `docs/blog/`)
+- **Twitter/X launch post:** https://x.com/Berkebey001 (see `docs/MARKETING.md`)
+- **Technical blog (ecosystem contribution):** https://dev.to/berkebey01/building-milestone-escrow-crowdfunding-on-soroban-5hc
 - **Security review:** [`docs/SECURITY.md`](SECURITY.md) → mentor/team review: `<status>`
 - **User guide:** [`docs/USER_GUIDE.md`](USER_GUIDE.md)
 - **Proof of users (mainnet):** https://stellarfund-black.vercel.app/proof
@@ -38,8 +38,8 @@ deliverables; `<…>` placeholders are filled in after the mainnet deploy.
 - [ ] **Live production app on mainnet** — Vercel deploy of the mainnet build
 - [ ] **20+ verified mainnet users** with real on-chain activity (tracked on `/proof`)
 - [ ] **Security review approved** by mentor/team (submit `docs/SECURITY.md`)
-- [ ] **Twitter/X launch post** published (fill link)
-- [ ] **Ecosystem contribution** published (blog link)
+- [x] **Twitter/X launch post** published — https://x.com/Berkebey001
+- [x] **Ecosystem contribution** published — https://dev.to/berkebey01/building-milestone-escrow-crowdfunding-on-soroban-5hc
 - [ ] Responses exported to Excel + linked in README + improvement section w/ commit links
 
 ## What still needs real-world action

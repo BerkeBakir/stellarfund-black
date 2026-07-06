@@ -14,6 +14,8 @@ Factory → Escrow → Reputation engine into a production product custodying re
 🧾 **Proof of users:** https://stellarfund-black.vercel.app/proof (on-chain backer evidence)
 🔒 **Security review:** [`docs/SECURITY.md`](docs/SECURITY.md)
 📖 **User guide:** [`docs/USER_GUIDE.md`](docs/USER_GUIDE.md)
+📣 **Launch thread:** https://x.com/Berkebey001
+📝 **Technical blog:** https://dev.to/berkebey01/building-milestone-escrow-crowdfunding-on-soroban-5hc
 
 > **Network:** Stellar **mainnet (Public)**. Contributions are **real XLM** — only fund
 > what you're comfortable with, and never share your secret key.
