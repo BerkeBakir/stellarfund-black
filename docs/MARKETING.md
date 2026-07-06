@@ -16,7 +16,7 @@ Cross-border crowdfunding where the money is held by a smart contract, released
 milestone-by-milestone, and refunded automatically if the goal isn't met.
 
 Built on @StellarOrg + Soroban. Live 👇
-<app-link>
+https://stellarfund-black.vercel.app
 
 **2/**
 The problem: creators outside major financial hubs can't access Kickstarter/GoFundMe
@@ -36,17 +36,17 @@ Architecture: a Factory deploys a dedicated escrow per campaign, and a Reputatio
 contract tracks creators who actually deliver.
 
 3 contracts, fully on-chain, verifiable on stellar.expert.
-Contracts: <factory-link>
+Contracts: https://stellar.expert/explorer/public/contract/CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2
 
 **5/**
 Every backer is public and verifiable on the in-app **Proof of Users** board — real
 wallet-signed transactions, no vanity metrics.
-<proof-link>
+https://stellarfund-black.vercel.app/proof
 
 **6/**
-🎥 2-minute demo: <video-link>
-🧾 Try it (Stellar mainnet): <app-link>
-🛠️ Open source: <repo-link>
+🎥 2-minute demo: https://youtu.be/Jo3XGBu4Q5o
+🧾 Try it (Stellar mainnet): https://stellarfund-black.vercel.app
+🛠️ Open source: https://github.com/BerkeBakir/stellarfund-black
 
 Feedback welcome — building the next version around it. #BuildOnStellar
 
@@ -60,8 +60,8 @@ Crowdfunding with on-chain **milestone escrow**: back campaigns in XLM, funds re
 tranche-by-tranche as milestones are met, and refunds are enforced by code if the goal
 is missed. 3 Soroban contracts, every backer verifiable on-chain.
 
-Try it 👉 <app-link>
-Demo 👉 <video-link>
+Try it 👉 https://stellarfund-black.vercel.app
+Demo 👉 https://youtu.be/Jo3XGBu4Q5o
 #Stellar #Soroban #XLM
 
 ---

@@ -118,9 +118,9 @@ Moving from testnet to mainnet surfaced real considerations we wrote up in a
 
 ## Try it
 
-- Live app (Stellar mainnet): `<app-link>`
-- Source: `<repo-link>`
-- Contracts on stellar.expert: `<factory-link>`
+- Live app (Stellar mainnet): `https://stellarfund-black.vercel.app`
+- Source: `https://github.com/BerkeBakir/stellarfund-black`
+- Contracts on stellar.expert: `https://stellar.expert/explorer/public/contract/CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2`
 
 Built with Rust + soroban-sdk, Next.js, and `@creit.tech/stellar-wallets-kit`.
 Feedback and PRs welcome. #BuildOnStellar
