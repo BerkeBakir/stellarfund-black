@@ -32,7 +32,7 @@ export default function ProofPage() {
         </Link>
         <h1 className="text-2xl font-bold text-gradient">User-interaction proof</h1>
         <p className="text-sm opacity-70">
-          Every contribution is a real, wallet-signed transaction on Stellar Testnet — permanent
+          Every contribution is a real, wallet-signed transaction on Stellar mainnet — permanent
           and publicly verifiable. Unique backer wallets are listed below with links to
           stellar.expert.
         </p>
@@ -104,7 +104,7 @@ export default function ProofPage() {
             </div>
           )}
           <p className="text-xs opacity-50">
-            Window: ledgers {data.windowStartLedger}–{data.latestLedger} (testnet RPC retention).
+            Window: ledgers {data.windowStartLedger}–{data.latestLedger} (mainnet RPC retention).
           </p>
         </>
       )}

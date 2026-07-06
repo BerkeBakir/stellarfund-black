@@ -8,6 +8,24 @@ import { signXdr } from './wallet';
 export const server = new rpc.Server(RPC_URL);
 export { nativeToScVal, scValToNative, Address, xdr };
 
+/**
+ * Retry a public-RPC call with linear backoff. The mainnet RPC is behind a
+ * rate limiter (Cloudflare 1015) that intermittently rejects bursts, which
+ * otherwise surfaces as "failed to fetch". A few spaced retries smooth it out.
+ */
+export async function withRetry<T>(fn: () => Promise<T>, tries = 4, delayMs = 1200): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < tries; i++) {
+    try {
+      return await fn();
+    } catch (e) {
+      lastErr = e;
+      if (i < tries - 1) await new Promise((r) => setTimeout(r, delayMs * (i + 1)));
+    }
+  }
+  throw lastErr;
+}
+
 function readSource(): Account {
   return new Account(Keypair.random().publicKey(), '0');
 }
@@ -19,7 +37,7 @@ export async function simulateRead(
     .addOperation(new Contract(contractId).call(method, ...args))
     .setTimeout(30)
     .build();
-  const sim = await server.simulateTransaction(tx);
+  const sim = await withRetry(() => server.simulateTransaction(tx));
   if (rpc.Api.isSimulationError(sim)) throw new Error(`Simulation failed: ${sim.error}`);
   const retval = sim.result?.retval;
   if (!retval) throw new Error(`No return value from ${method}.`);

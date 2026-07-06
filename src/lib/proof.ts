@@ -1,5 +1,5 @@
 import { scValToNative, xdr } from '@stellar/stellar-sdk';
-import { server } from './soroban';
+import { server, withRetry } from './soroban';
 import { listCampaigns } from './factory';
 
 export type Backer = {
@@ -23,8 +23,11 @@ export type ProofData = {
 // returns a continuation cursor — even for empty pages. We therefore start near
 // the oldest retained ledger and paginate forward via the cursor until we reach
 // the latest ledger, so no contribution is missed.
-const LOOKBACK_LEDGERS = 100_000;
-const MAX_PAGES = 80;
+// Keep the scan small: fewer getEvents pages = far less pressure on the
+// rate-limited mainnet RPC. ~20k ledgers ≈ the last ~28h, which covers a fresh
+// launch; older contributions remain permanently on stellar.expert.
+const LOOKBACK_LEDGERS = 20_000;
+const MAX_PAGES = 20;
 
 function ledgerFromCursor(cursor: string): number {
   // cursor = "<toid>-<index>"; toid = (ledger << 32) | ...
@@ -37,7 +40,7 @@ function ledgerFromCursor(cursor: string): number {
 }
 
 export async function getProofData(): Promise<ProofData> {
-  const latestLedger = (await server.getLatestLedger()).sequence;
+  const latestLedger = (await withRetry(() => server.getLatestLedger())).sequence;
   const windowStartLedger = Math.max(latestLedger - LOOKBACK_LEDGERS, 1);
   const campaigns = await listCampaigns();
 
@@ -58,7 +61,9 @@ export async function getProofData(): Promise<ProofData> {
       const req = cursor
         ? { cursor, filters, limit: 10000 }
         : { startLedger: windowStartLedger, filters, limit: 10000 };
-      const resp = await server.getEvents(req);
+      // Space the calls and retry on rate-limit so the board never hard-fails.
+      if (page > 0) await new Promise((r) => setTimeout(r, 250));
+      const resp = await withRetry(() => server.getEvents(req));
 
       for (const e of resp.events ?? []) {
         let topic0: string;

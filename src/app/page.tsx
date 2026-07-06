@@ -63,9 +63,14 @@ export default function Home() {
         }),
       );
       if (!active) return;
-      const map: Record<string, Summary> = {};
-      for (const e of entries) if (e) map[e[0]] = e[1];
-      setSummaries(map);
+      // Merge into the previous summaries instead of replacing: a transient
+      // RPC rate-limit on one campaign shouldn't make it vanish from the list
+      // (that caused the "campaign flickers in and out" issue).
+      setSummaries((prev) => {
+        const map = { ...prev };
+        for (const e of entries) if (e) map[e[0]] = e[1];
+        return map;
+      });
     })();
     return () => {
       active = false;

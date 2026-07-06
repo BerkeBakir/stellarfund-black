@@ -35,7 +35,9 @@ export default function PollProvider() {
       } catch { /* non-fatal */ }
     }
     tick();
-    const t = setInterval(tick, 5000);
+    // Poll gently: the mainnet RPC rate-limits bursts, so 20s keeps the app
+    // live without tripping "failed to fetch".
+    const t = setInterval(tick, 20000);
     return () => { active = false; clearInterval(t); };
   }, [setCampaigns, addEvents]);
 

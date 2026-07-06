@@ -1,5 +1,5 @@
 import { scValToNative, xdr } from '@stellar/stellar-sdk';
-import { server } from './soroban';
+import { server, withRetry } from './soroban';
 
 export type EventKind = 'created' | 'contrib' | 'goal_met' | 'claimed' | 'refunded' | 'rep_up';
 export type ChainEvent = {
@@ -24,10 +24,12 @@ export async function getCampaignEvents(
   // Soroban RPC allows at most 5 contract IDs per filter; scan in chunks of 5.
   for (let c = 0; c < contractIds.length; c += 5) {
     const chunk = contractIds.slice(c, c + 5);
-    const resp = await server.getEvents({
-      startLedger,
-      filters: [{ type: 'contract', contractIds: chunk, topics: [['*', '*']] }],
-    });
+    const resp = await withRetry(() =>
+      server.getEvents({
+        startLedger,
+        filters: [{ type: 'contract', contractIds: chunk, topics: [['*', '*']] }],
+      }),
+    );
     latestLedger = Math.max(latestLedger, resp.latestLedger);
     for (const e of resp.events ?? []) {
       try {

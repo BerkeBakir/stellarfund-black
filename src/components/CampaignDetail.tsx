@@ -98,10 +98,20 @@ export default function CampaignDetail({ id }: { id: string }) {
       toast.success(`${label} succeeded`);
       await refresh();
     } catch (e) {
-      let msg = e instanceof Error ? e.message : `${label} failed`;
-      if (/insufficient|balance|underfunded|txINSUFFICIENT/i.test(msg)) {
-        msg = 'Transaction failed — make sure your wallet holds enough XLM (your contribution plus a little for the base reserve and fees).';
+      // Map noisy chain errors (long XDR / HostError strings) to short, human text.
+      const raw = e instanceof Error ? e.message : String(e);
+      let msg: string;
+      if (/insufficient|balance|underfunded|txINSUFFICIENT/i.test(raw)) {
+        msg = 'Not enough XLM — keep enough for your contribution plus the base reserve and fees.';
         if (publicKey) setXlmBalance(await getXlmBalance(publicKey).catch(() => null));
+      } else if (/reject|declined|denied|cancel|user/i.test(raw)) {
+        msg = 'Transaction cancelled in your wallet.';
+      } else if (/rate|1015|failed to fetch|timeout|fetch/i.test(raw)) {
+        msg = 'Network is busy — please try again in a moment.';
+      } else if (/not active|deadline|goal/i.test(raw)) {
+        msg = `${label} not allowed right now (check the campaign status and deadline).`;
+      } else {
+        msg = `${label} failed. Please try again.`;
       }
       setTxResult(null, msg);
       setTxStatus('fail');
