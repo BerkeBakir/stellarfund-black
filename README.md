@@ -109,13 +109,14 @@ added after collection)_. Each recurring theme maps to a shipped change with its
 
 ## Deployed on Mainnet
 
-_Addresses are filled in after the mainnet deploy._
+Deployed 2026-07-06 on Stellar **Public (mainnet)**.
 
 | Contract | Address |
 |---|---|
-| Factory | `<CFACTORY…>` |
-| Reputation | `<CREP…>` |
+| Factory | [`CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2`](https://stellar.expert/explorer/public/contract/CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2) |
+| Reputation | [`CCXGJUE6UXPMU27WKJZJS7XXV2NA5ZQPWLPQUJ2XNGDH5TD7L4DMAT5X`](https://stellar.expert/explorer/public/contract/CCXGJUE6UXPMU27WKJZJS7XXV2NA5ZQPWLPQUJ2XNGDH5TD7L4DMAT5X) |
 | Token (native XLM SAC) | `CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA` |
+| Campaign wasm hash | `f42f7c5faae416b3a77695e9f9a8330cdad45901a1deebea894081ccf7f4f1a2` |
 
 ## Getting started
 

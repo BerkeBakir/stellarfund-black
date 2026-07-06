@@ -19,10 +19,10 @@ deliverables; `<…>` placeholders are filled in after the mainnet deploy.
 ## Mainnet contract addresses (Stellar Public)
 | Component | Address |
 |---|---|
-| Factory | `<CFACTORY…>` |
-| Reputation | `<CREP…>` |
+| Factory | `CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2` |
+| Reputation | `CCXGJUE6UXPMU27WKJZJS7XXV2NA5ZQPWLPQUJ2XNGDH5TD7L4DMAT5X` |
 | Token (native XLM SAC) | `CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWMA` |
-| Campaign wasm hash | `<hash>` |
+| Campaign wasm hash | `f42f7c5faae416b3a77695e9f9a8330cdad45901a1deebea894081ccf7f4f1a2` |
 
 ## Requirements checklist
 - [x] **Advanced feature** — Cross-border flows via SEP-24/SEP-10 anchor integration
@@ -34,8 +34,8 @@ deliverables; `<…>` placeholders are filled in after the mainnet deploy.
 - [x] User guide + full documentation
 - [x] Onboarding form spec (wallet + email + name + rating + feedback)
 - [x] 30+ meaningful commits
-- [ ] **Smart contracts deployed on mainnet** — _needs XLM funding of the deploy account_
-- [ ] **Live production app on mainnet** — deploy after contracts
+- [x] **Smart contracts deployed on mainnet** — Factory + Reputation live (see addresses)
+- [ ] **Live production app on mainnet** — Vercel deploy of the mainnet build
 - [ ] **20+ verified mainnet users** with real on-chain activity (tracked on `/proof`)
 - [ ] **Security review approved** by mentor/team (submit `docs/SECURITY.md`)
 - [ ] **Twitter/X launch post** published (fill link)

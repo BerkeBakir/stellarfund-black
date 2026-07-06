@@ -3,10 +3,12 @@ export const RPC_URL = 'https://mainnet.sorobanrpc.com';
 export const HORIZON_URL = 'https://horizon.stellar.org';
 export const EXPLORER_BASE_URL = 'https://stellar.expert/explorer/public';
 
-// StellarFund — deployed on Stellar MAINNET (Black Belt / L6).
-// Contract addresses are filled in after the mainnet deploy (Phase 2).
-export const FACTORY_ID = process.env.NEXT_PUBLIC_FACTORY_ID ?? '';
-export const REPUTATION_ID = process.env.NEXT_PUBLIC_REPUTATION_ID ?? '';
+// StellarFund — deployed on Stellar MAINNET (Black Belt / L6), 2026-07-06.
+// Deployer: GAQ5YHRV5POBZDJFP5EI5S6HOJCXVFY5LOQG76TI44D3DDEKCIANNURB
+export const FACTORY_ID =
+  process.env.NEXT_PUBLIC_FACTORY_ID ?? 'CBUAZAAH7R7WXP3PIBKVPHYJ3XIHUTDOYBNUPPTLDVUWI6ZK6X33ZPN2';
+export const REPUTATION_ID =
+  process.env.NEXT_PUBLIC_REPUTATION_ID ?? 'CCXGJUE6UXPMU27WKJZJS7XXV2NA5ZQPWLPQUJ2XNGDH5TD7L4DMAT5X';
 
 // Native XLM via its Stellar Asset Contract (SAC) on mainnet. The escrow is
 // token-agnostic, so on mainnet it custodies real XLM — no faucet, no minting.
@@ -15,7 +17,9 @@ export const TOKEN_ID = 'CAS3J7GYLGXMF6TDJBBYYSE3HQ6BBSMLNUQ34T6TZMYMW2EVH34XOWM
 export const TOKEN_CODE = 'XLM';
 export const TOKEN_DECIMALS = 7;
 export const TOKEN_ISSUER = ''; // native asset — no issuer
-export const CAMPAIGN_WASM_HASH = process.env.NEXT_PUBLIC_CAMPAIGN_WASM_HASH ?? '';
+export const CAMPAIGN_WASM_HASH =
+  process.env.NEXT_PUBLIC_CAMPAIGN_WASM_HASH ??
+  'f42f7c5faae416b3a77695e9f9a8330cdad45901a1deebea894081ccf7f4f1a2';
 
 // Campaigns hidden from the UI/analytics (broken economics). Empty on mainnet;
 // their on-chain contributions would still count on /proof if any were added.
