@@ -44,27 +44,32 @@ export async function simulateRead(
   return scValToNative(retval);
 }
 
+// The CLI default (100 stroops) is too low on mainnet, so transactions never
+// get included and hang in "pending". This is a MAX inclusion-fee bid — Soroban
+// only charges the actual metered fee (~0.01–0.05 XLM), not the full cap.
+const TX_FEE = '2000000'; // 0.2 XLM cap
+
 export async function invoke(
   publicKey: string, contractId: string, method: string, args: xdr.ScVal[]
 ): Promise<string> {
-  const account = await server.getAccount(publicKey);
-  const built = new TransactionBuilder(account, { fee: BASE_FEE, networkPassphrase: NETWORK_PASSPHRASE })
+  const account = await withRetry(() => server.getAccount(publicKey));
+  const built = new TransactionBuilder(account, { fee: TX_FEE, networkPassphrase: NETWORK_PASSPHRASE })
     .addOperation(new Contract(contractId).call(method, ...args))
-    .setTimeout(60)
+    .setTimeout(120)
     .build();
-  const prepared = await server.prepareTransaction(built);
+  const prepared = await withRetry(() => server.prepareTransaction(built));
   const signedXdr = await signXdr(prepared.toXDR(), publicKey);
   const signedTx = TransactionBuilder.fromXDR(signedXdr, NETWORK_PASSPHRASE);
-  const sent = await server.sendTransaction(signedTx);
+  const sent = await withRetry(() => server.sendTransaction(signedTx));
   if (sent.status === 'ERROR') {
     throw new Error(`Submission failed: ${sent.errorResult?.toXDR('base64') ?? 'unknown'}`);
   }
   const hash = sent.hash;
   let getResp = await server.getTransaction(hash);
-  const deadline = Date.now() + 30_000;
-  while (getResp.status === 'NOT_FOUND' && Date.now() < deadline) {
-    await new Promise((r) => setTimeout(r, 2000));
-    getResp = await server.getTransaction(hash);
+  const deadline = Date.now() + 60_000;
+  while ((getResp.status === 'NOT_FOUND') && Date.now() < deadline) {
+    await new Promise((r) => setTimeout(r, 2500));
+    getResp = await server.getTransaction(hash).catch(() => getResp);
   }
   if (getResp.status !== 'SUCCESS') throw new Error(`Transaction ${hash} ended with status ${getResp.status}.`);
   return hash;
