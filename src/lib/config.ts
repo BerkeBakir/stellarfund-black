@@ -31,7 +31,7 @@ export const HIDDEN_CAMPAIGNS = new Set<string>([]);
 // External user-feedback Google Form (L6: wallet + email + name + rating + feedback).
 export const FEEDBACK_FORM_URL =
   process.env.NEXT_PUBLIC_FEEDBACK_FORM_URL ??
-  'https://docs.google.com/forms/d/e/1FAIpQLSc68-9vpke9EhgRoir6NSVas_RsJldfz8JoLaBqyUXO42420w/viewform';
+  'https://docs.google.com/forms/d/e/1FAIpQLSdPHTcL_s4Q2TTPq6YpXOhP0XYzS-EGpXm1nKwajXKU_lMOQw/viewform';
 
 // SEP-24 anchor demo. testanchor is testnet-only, so on the mainnet build the
 // /ramp page is shown as a protocol demonstration and gated behind this flag.

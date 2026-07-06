@@ -13,7 +13,7 @@ deliverables; `<…>` placeholders are filled in after the mainnet deploy.
 - **User guide:** [`docs/USER_GUIDE.md`](USER_GUIDE.md)
 - **Proof of users (mainnet):** https://stellarfund-black.vercel.app/proof
 - **Private analytics:** `/stats` (key-gated)
-- **User onboarding form:** `<form-link>` (questions in `docs/GOOGLE_FORM.md`)
+- **User onboarding form:** https://docs.google.com/forms/d/e/1FAIpQLSdPHTcL_s4Q2TTPq6YpXOhP0XYzS-EGpXm1nKwajXKU_lMOQw/viewform (questions in `docs/GOOGLE_FORM.md`)
 - **Exported responses (Excel):** `docs/feedback/…xlsx` `<add after collection>`
 
 ## Mainnet contract addresses (Stellar Public)
